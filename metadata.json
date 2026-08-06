@@ -1,0 +1,6 @@
+{
+  "name": "Unbeatable Offshore Clone",
+  "description": "A pixel-perfect UI clone of the Unbeatable Offshore corporate website.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
