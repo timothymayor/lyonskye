@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, MouseEvent } from 'react';
+import lyonskyeLogo from './assets/images/lyonskye_logo_1786115327313.jpg';
 import industrialPracticeImg from './assets/images/regenerated_image_1786059376955.jpg';
 import heroSlide2Img from './assets/images/hero_marine_technician_1786064954171.jpg';
 import heroSlide1Img from './assets/images/regenerated_image_1786061313011.jpg';
@@ -21,6 +22,7 @@ import {
   Menu,
   X,
   ChevronRight,
+  ArrowUp,
 } from 'lucide-react';
 
 const XIcon = ({ className }: { className?: string }) => (
@@ -32,7 +34,7 @@ const XIcon = ({ className }: { className?: string }) => (
 const heroSlides = [
   {
     id: 1,
-    subtitle: 'Unbeatable Offshore',
+    subtitle: 'Lyonskye Offshore',
     title: 'Simplifying the\nmarine service',
     image: heroSlide1Img,
     primaryBtn: 'About Us',
@@ -40,7 +42,7 @@ const heroSlides = [
   },
   {
     id: 2,
-    subtitle: 'Unbeatable Offshore',
+    subtitle: 'Lyonskye Offshore',
     title: 'Simplifying the\nmarine service',
     image: heroSlide2Img,
     primaryBtn: 'About Us',
@@ -48,7 +50,7 @@ const heroSlides = [
   },
   {
     id: 3,
-    subtitle: 'Unbeatable Offshore',
+    subtitle: 'Lyonskye Offshore',
     title: 'Simplifying the\nmarine service',
     image: heroSlide3Img,
     primaryBtn: 'About Us',
@@ -56,7 +58,7 @@ const heroSlides = [
   }, 
    {
     id: 4,
-    subtitle: 'Unbeatable Offshore',
+    subtitle: 'Lyonskye Offshore',
     title: 'Simplifying the\nmarine service',
     image: heroSlide4Img,
     primaryBtn: 'About Us',
@@ -69,6 +71,34 @@ export default function App() {
   const [isPaused, setIsPaused] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreInfoOpen, setMoreInfoOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  const scrollToSection = (e: MouseEvent, targetId: string) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    } else if (targetId === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 350) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (isPaused) return;
@@ -90,7 +120,7 @@ export default function App() {
             <Mail size={13} className="shrink-0 text-[#2f99d6]" /> info@unbeatableoffshore.com
           </a>
           <div className="flex items-center gap-1.5">
-            <MapPin size={13} className="shrink-0 text-[#2f99d6]" /> KM 3 East-West Rd, Akpajo, PH, R/S
+            <MapPin size={13} className="shrink-0 text-[#2f99d6]" /> 71, Obio Imo Street, Uyo, Akwa Ibom State, Nigeria
           </div>
         </div>
         <div className="flex gap-4 items-center shrink-0 pt-1 md:pt-0">
@@ -107,45 +137,39 @@ export default function App() {
       </div>
 
       {/* Navbar */}
-      <nav className="bg-white flex justify-between items-center px-4 md:pl-12 shadow-sm relative z-50 h-[75px] md:h-[85px]">
+      <nav className="bg-white flex justify-between items-center px-4 md:pl-12 shadow-sm relative z-50 h-[75px] md:h-[85px] sticky top-0">
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group">
-            <div className="w-14 h-9 sm:w-16 sm:h-10 relative flex items-center justify-center shrink-0">
-              <svg viewBox="0 0 100 50" className="w-full h-full absolute">
-                <path d="M10,25 Q30,5 50,25 T90,25 L90,45 Q70,25 50,45 T10,45 Z" fill="#0d529b" />
-                <path d="M10,20 Q30,0 50,20 T90,20 L90,25 Q70,5 50,25 T10,25 Z" fill="#df0a15" />
-                <circle cx="22" cy="25" r="7" fill="#2f99d6" />
-              </svg>
-              <span className="relative z-10 text-[8px] sm:text-[9px] font-bold text-white ml-2">UOLS</span>
-            </div>
-            <div className="flex flex-col text-[9px] sm:text-[10px] leading-[1.2] font-bold tracking-wide mt-0.5">
-              <span className="text-[#0d529b]">UNBEATABLE OFFSHORE</span>
-              <span className="text-[#2f99d6]">& LOGISTIC SERVICES</span>
-            </div>
+          <a href="#home" onClick={(e) => scrollToSection(e, 'home')} className="flex items-center gap-2 group py-1">
+            <img
+              src={lyonskyeLogo}
+              alt="Lyonskye Engineering Nigeria Ltd"
+              className="h-12 sm:h-16 w-auto object-contain mix-blend-multiply transition-transform group-hover:scale-105"
+              referrerPolicy="no-referrer"
+            />
           </a>
         </div>
         
         {/* Desktop Links */}
         <div className="flex items-center h-full">
           <div className="hidden lg:flex items-center gap-7 lg:gap-8 text-[15px] font-medium text-slate-700 mr-8 lg:mr-10">
-            <a href="#" className="hover:text-blue-600 transition-colors">Home</a>
-            <a href="#" className="hover:text-blue-600 transition-colors">About Us</a>
-            <a href="#" className="hover:text-blue-600 transition-colors">Services</a>
-            <a href="#" className="hover:text-blue-600 transition-colors">Career</a>
+            <a href="#home" onClick={(e) => scrollToSection(e, 'home')} className="hover:text-blue-600 transition-colors">Home</a>
+            <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className="hover:text-blue-600 transition-colors">About Us</a>
+            <a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="hover:text-blue-600 transition-colors">Services</a>
+            <a href="#career" onClick={(e) => scrollToSection(e, 'career')} className="hover:text-blue-600 transition-colors">Career</a>
             <div className="relative group/menu">
-              <a href="#" className="flex items-center gap-1 hover:text-blue-600 transition-colors py-2">
+              <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className="flex items-center gap-1 hover:text-blue-600 transition-colors py-2">
                 More Info <ChevronDown size={14} className="mt-0.5" />
               </a>
               <div className="absolute top-full left-0 hidden group-hover/menu:block w-48 bg-white shadow-xl rounded-b-lg border border-slate-100 py-2 z-50">
-                <a href="#" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">Policies</a>
-                <a href="#" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">Certifications</a>
-                <a href="#" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">Verify Licence</a>
+                <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">Policies</a>
+                <a href="#features" onClick={(e) => scrollToSection(e, 'features')} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">Certifications</a>
+                <a href="#features" onClick={(e) => scrollToSection(e, 'features')} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">Verify Licence</a>
               </div>
             </div>
-            <a href="#" className="hover:text-blue-600 transition-colors">Contact</a>
+            <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="hover:text-blue-600 transition-colors">Contact</a>
           </div>
-          <button className="hidden lg:flex bg-[#df0a15] text-white h-full px-8 items-center gap-2 font-semibold text-[15px] hover:bg-red-700 transition-colors shadow-sm">
+          <button onClick={(e) => scrollToSection(e, 'contact')} className="hidden lg:flex bg-[#df0a15] text-white h-full px-8 items-center gap-2 font-semibold text-[15px] hover:bg-red-700 transition-colors shadow-sm">
             <span>Speak With Us</span>
             <ArrowRight size={18} />
           </button>
@@ -166,32 +190,32 @@ export default function App() {
         <div className="lg:hidden fixed inset-x-0 top-[115px] sm:top-[120px] bottom-0 bg-slate-900/60 backdrop-blur-sm z-40 flex flex-col justify-start animate-fadeIn">
           <div className="bg-white border-b border-slate-200 shadow-2xl p-6 flex flex-col gap-4 max-h-[85vh] overflow-y-auto">
             <a
-              href="#"
-              onClick={() => setMobileMenuOpen(false)}
+              href="#home"
+              onClick={(e) => scrollToSection(e, 'home')}
               className="text-[16px] font-semibold text-slate-800 hover:text-[#0d529b] py-2 border-b border-slate-100 flex items-center justify-between"
             >
               Home
               <ChevronRight size={18} className="text-slate-400" />
             </a>
             <a
-              href="#"
-              onClick={() => setMobileMenuOpen(false)}
+              href="#about"
+              onClick={(e) => scrollToSection(e, 'about')}
               className="text-[16px] font-semibold text-slate-800 hover:text-[#0d529b] py-2 border-b border-slate-100 flex items-center justify-between"
             >
               About Us
               <ChevronRight size={18} className="text-slate-400" />
             </a>
             <a
-              href="#"
-              onClick={() => setMobileMenuOpen(false)}
+              href="#services"
+              onClick={(e) => scrollToSection(e, 'services')}
               className="text-[16px] font-semibold text-slate-800 hover:text-[#0d529b] py-2 border-b border-slate-100 flex items-center justify-between"
             >
               Services
               <ChevronRight size={18} className="text-slate-400" />
             </a>
             <a
-              href="#"
-              onClick={() => setMobileMenuOpen(false)}
+              href="#career"
+              onClick={(e) => scrollToSection(e, 'career')}
               className="text-[16px] font-semibold text-slate-800 hover:text-[#0d529b] py-2 border-b border-slate-100 flex items-center justify-between"
             >
               Career
@@ -209,16 +233,16 @@ export default function App() {
               </button>
               {moreInfoOpen && (
                 <div className="pl-4 pt-3 flex flex-col gap-2.5 text-slate-600">
-                  <a href="#" onClick={() => setMobileMenuOpen(false)} className="py-1 text-sm hover:text-[#0d529b]">Policies</a>
-                  <a href="#" onClick={() => setMobileMenuOpen(false)} className="py-1 text-sm hover:text-[#0d529b]">Certifications</a>
-                  <a href="#" onClick={() => setMobileMenuOpen(false)} className="py-1 text-sm hover:text-[#0d529b]">Verify Licence</a>
+                  <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className="py-1 text-sm hover:text-[#0d529b]">Policies</a>
+                  <a href="#features" onClick={(e) => scrollToSection(e, 'features')} className="py-1 text-sm hover:text-[#0d529b]">Certifications</a>
+                  <a href="#features" onClick={(e) => scrollToSection(e, 'features')} className="py-1 text-sm hover:text-[#0d529b]">Verify Licence</a>
                 </div>
               )}
             </div>
 
             <a
-              href="#"
-              onClick={() => setMobileMenuOpen(false)}
+              href="#contact"
+              onClick={(e) => scrollToSection(e, 'contact')}
               className="text-[16px] font-semibold text-slate-800 hover:text-[#0d529b] py-2 border-b border-slate-100 flex items-center justify-between"
             >
               Contact
@@ -226,7 +250,7 @@ export default function App() {
             </a>
 
             <button
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => scrollToSection(e, 'contact')}
               className="w-full bg-[#df0a15] text-white py-3.5 px-6 rounded-lg font-semibold text-[15px] flex items-center justify-center gap-2 hover:bg-red-700 transition-colors shadow-md mt-2"
             >
               <span>Speak With Us</span>
@@ -238,6 +262,7 @@ export default function App() {
 
       {/* Hero Automatic Slider Section */}
       <section
+        id="home"
         className="relative min-h-[500px] sm:min-h-[560px] md:h-[650px] flex items-center px-4 sm:px-8 md:px-12 py-16 md:py-0 overflow-hidden select-none"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
@@ -268,11 +293,17 @@ export default function App() {
             {heroSlides[currentSlide].title}
           </h1>
           <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-stretch sm:items-center">
-            <button className="bg-[#df0a15] text-white px-7 py-3.5 flex items-center justify-center gap-2.5 font-semibold text-[15px] hover:bg-red-700 transition-colors shadow-xl group whitespace-nowrap rounded-sm sm:rounded-none">
+            <button
+              onClick={(e) => scrollToSection(e, 'about')}
+              className="bg-[#df0a15] text-white px-7 py-3.5 flex items-center justify-center gap-2.5 font-semibold text-[15px] hover:bg-red-700 transition-colors shadow-xl group whitespace-nowrap rounded-sm sm:rounded-none"
+            >
               <span>{heroSlides[currentSlide].primaryBtn}</span>
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="bg-[#0b63b3] text-white px-7 py-3.5 flex items-center justify-center gap-2.5 font-semibold text-[15px] hover:bg-blue-700 transition-colors shadow-xl group whitespace-nowrap rounded-sm sm:rounded-none">
+            <button
+              onClick={(e) => scrollToSection(e, 'features')}
+              className="bg-[#0b63b3] text-white px-7 py-3.5 flex items-center justify-center gap-2.5 font-semibold text-[15px] hover:bg-blue-700 transition-colors shadow-xl group whitespace-nowrap rounded-sm sm:rounded-none"
+            >
               <span>{heroSlides[currentSlide].secondaryBtn}</span>
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
@@ -295,7 +326,7 @@ export default function App() {
       </section>
 
       {/* Welcome Section */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 max-w-[1000px] mx-auto text-center">
+      <section id="about" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 max-w-[1000px] mx-auto text-center">
         <h2 className="text-2xl sm:text-3xl md:text-[32px] font-medium text-[#111a3a] mb-6 md:mb-8">
           Welcome, get to know who we are!
         </h2>
@@ -303,13 +334,12 @@ export default function App() {
           Starting with basic and proven fundamental necessities ready to be modified to fit the task at hand is
           the easiest, most efficient solution to save time and ensure success in all aspects of marine, engineering
           projects, be it civil, offshore, chemical, etc, effective construction activities are completed in the most
-          effective and cost-efficient manner possible, that is what UNBEATABLE OFFSHORE AND LOGISTIC
-          SERVICES LTD stands for.
+          effective and cost-efficient manner possible, that is what LYONSKYE OFFSHORE MARINE LTD stands for.
         </p>
       </section>
 
       {/* Features Grid */}
-      <section className="pb-16 sm:pb-20 md:pb-28 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 text-center">
+      <section id="features" className="pb-16 sm:pb-20 md:pb-28 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 text-center">
         <div className="relative overflow-hidden flex flex-col items-center p-6 sm:p-8 rounded-2xl bg-white border border-slate-100 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-blue-200/70 group cursor-pointer">
           {/* Light Gradient Background Overlay on Hover */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-sky-50/40 to-red-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
@@ -373,7 +403,7 @@ export default function App() {
           <h2 className="text-xl sm:text-2xl md:text-[30px] lg:text-[36px] font-semibold leading-[1.35] mb-8 sm:mb-10 text-white tracking-normal">
             Our desire therefore is to contribute to better and safer industrial practices through adequate planning and execution of projects bearing in mind the demands of the environment and statutory regulations.
           </h2>
-          <button className="bg-[#df0a15] text-white px-7 py-3.5 flex items-center gap-2.5 font-semibold text-[15px] hover:bg-red-700 transition-colors shadow-lg group">
+          <button onClick={(e) => scrollToSection(e, 'contact')} className="bg-[#df0a15] text-white px-7 py-3.5 flex items-center gap-2.5 font-semibold text-[15px] hover:bg-red-700 transition-colors shadow-lg group">
             <span>Speak With Us</span>
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </button>
@@ -381,7 +411,7 @@ export default function App() {
       </section>
 
       {/* Services Grid (No Gaps) */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full">
+      <section id="services" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full">
         <div className="relative h-[280px] sm:h-[320px] md:h-[360px] group overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1504913659239-6affa48411bc"
@@ -433,14 +463,14 @@ export default function App() {
       </section>
 
       {/* CTA Banner Section */}
-      <section className="bg-[#df0a15] text-white py-16 sm:py-20 md:py-[100px] px-4 text-center relative overflow-hidden">
+      <section id="career" className="bg-[#df0a15] text-white py-16 sm:py-20 md:py-[100px] px-4 text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.15] bg-[url('https://images.unsplash.com/photo-1584851275981-229f3d5ea76e?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay"></div>
         <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
           <h2 className="text-3xl sm:text-4xl md:text-[50px] font-medium mb-4">We are just a call away?</h2>
           <p className="mb-8 sm:mb-10 text-white/95 text-sm sm:text-base md:text-[16px]">
             Get better results in your business by giving us a quick call!
           </p>
-          <button className="bg-white text-[#df0a15] px-8 py-3.5 font-bold text-[15px] flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md rounded-sm">
+          <button onClick={(e) => scrollToSection(e, 'contact')} className="bg-white text-[#df0a15] px-8 py-3.5 font-bold text-[15px] flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md rounded-sm">
             <span>Speak With Us</span>
             <ArrowRight size={18} />
           </button>
@@ -448,7 +478,7 @@ export default function App() {
       </section>
 
       {/* Partners Logos Section */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 max-w-[1200px] mx-auto w-full">
+      <section id="partners" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 max-w-[1200px] mx-auto w-full">
         <div className="flex flex-wrap justify-center items-center gap-x-8 sm:gap-x-12 md:gap-x-20 gap-y-8 sm:gap-y-12 opacity-90">
           {/* Row 1 */}
           <div className="flex flex-col items-center">
@@ -502,42 +532,39 @@ export default function App() {
       </section>
 
       {/* Main Footer */}
-      <footer className="bg-[#111a3a] text-gray-300 pt-16 sm:pt-20 pb-12">
+      <footer id="contact" className="bg-[#111a3a] text-gray-300 pt-16 sm:pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-20">
           <div>
-            <div className="flex items-center gap-3 mb-6 sm:mb-8">
-              <div className="w-[64px] h-[40px] sm:w-[72px] sm:h-[45px] relative flex items-center justify-center shrink-0">
-                <svg viewBox="0 0 100 50" className="w-full h-full absolute">
-                  <path d="M10,25 Q30,5 50,25 T90,25 L90,45 Q70,25 50,45 T10,45 Z" fill="#0d529b" />
-                  <path d="M10,20 Q30,0 50,20 T90,20 L90,25 Q70,5 50,25 T10,25 Z" fill="#df0a15" />
-                </svg>
-                <span className="relative z-10 text-[10px] sm:text-[11px] font-bold text-white ml-2">UOLS</span>
-              </div>
-              <div className="flex flex-col text-[10px] sm:text-[11px] leading-[1.3] text-white font-bold tracking-wide mt-0.5">
-                <span>UNBEATABLE OFFSHORE</span>
-                <span className="text-[#2f99d6]">& LOGISTIC SERVICES</span>
-              </div>
+            <div className="mb-6 sm:mb-8">
+              <a href="#home" onClick={(e) => scrollToSection(e, 'home')} className="inline-block bg-white p-2.5 rounded-xl shadow-md hover:opacity-95 transition-opacity">
+                <img
+                  src={lyonskyeLogo}
+                  alt="Lyonskye Engineering Nigeria Ltd"
+                  className="h-12 sm:h-14 w-auto object-contain"
+                  referrerPolicy="no-referrer"
+                />
+              </a>
             </div>
             <p className="text-xs sm:text-[14px] leading-[1.8] text-[#a0aec0]">
-              UNBEATABLE OFFSHORE AND LOGISTIC SERVICES LTD is an independent corporation adaptable to the needs of the oil & gas, marine and construction industries, both onshore and offshore.
+              LYONSKYE OFFSHORE MARINE LTD is an independent corporation adaptable to the needs of the oil & gas, marine and construction industries, both onshore and offshore.
             </p>
           </div>
 
           <div className="md:ml-6 lg:ml-12">
             <h4 className="text-white text-base sm:text-[18px] font-medium mb-4 sm:mb-8">Quick Links</h4>
             <ul className="space-y-3 sm:space-y-4 text-xs sm:text-[15px] text-[#a0aec0]">
-              <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Services</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Policies</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Career</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
+              <li><a href="#about" onClick={(e) => scrollToSection(e, 'about')} className="hover:text-white transition-colors">About Us</a></li>
+              <li><a href="#services" onClick={(e) => scrollToSection(e, 'services')} className="hover:text-white transition-colors">Services</a></li>
+              <li><a href="#about" onClick={(e) => scrollToSection(e, 'about')} className="hover:text-white transition-colors">Policies</a></li>
+              <li><a href="#career" onClick={(e) => scrollToSection(e, 'career')} className="hover:text-white transition-colors">Career</a></li>
+              <li><a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="hover:text-white transition-colors">Contact Us</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-white text-base sm:text-[18px] font-medium mb-4 sm:mb-8">Office Address</h4>
             <p className="text-xs sm:text-[15px] text-[#a0aec0] leading-[1.8] mb-6 sm:mb-8 pr-0 md:pr-8">
-              Km3 East West Road, Eleme/Akpajo Express way, Eleme, Port Harcourt, Rivers State.
+              71, Obio Imo Street, Uyo, Akwa Ibom State, Nigeria.
             </p>
             <div className="flex gap-4">
               <a href="#" aria-label="Facebook" className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#111a3a] hover:bg-gray-200 transition-colors">
@@ -556,11 +583,22 @@ export default function App() {
 
       {/* Footer Bottom Bar */}
       <div className="bg-white text-[#666] py-6 px-4 md:px-12 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left gap-2 text-xs sm:text-[14px]">
-        <p>© Unbeatable Offshore and Logistics Services 2023</p>
+        <p>© Lyonskye Offshore Marine Ltd 2026</p>
         <p>
-          Site Credit: <span className="text-[#df0a15]">Calen SME Tech</span>
+          Site Credit: <a href="https://tsmdigital.solutions/" target="_blank" rel="noopener noreferrer" className="text-[#df0a15] hover:underline">TSM Digital Solutions</a>
         </p>
       </div>
+
+      {/* Floating Back to Top Button */}
+      <button
+        onClick={scrollToTop}
+        aria-label="Back to Top"
+        className={`fixed bottom-6 right-6 z-50 p-3.5 bg-[#df0a15] text-white rounded-full shadow-2xl transition-all duration-300 hover:bg-[#0d529b] hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#0d529b] ${
+          showBackToTop ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-10 pointer-events-none'
+        }`}
+      >
+        <ArrowUp size={20} strokeWidth={2.5} />
+      </button>
     </div>
   );
 }
