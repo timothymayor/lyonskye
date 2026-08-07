@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { useState, useEffect } from 'react';
+import industrialPracticeImg from './assets/images/regenerated_image_1786059376955.jpg';
+import heroSlide2Img from './assets/images/regenerated_image_1786060986104.jpg';
+import heroSlide1Img from './assets/images/regenerated_image_1786061313011.jpg';
+import heroSlide3Img from './assets/images/regenerated_image_1786061855609.jpg';
 import {
   Phone,
   Mail,
@@ -20,7 +25,60 @@ const XIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const heroSlides = [
+  {
+    id: 1,
+    subtitle: 'Unbeatable Offshore',
+    title: 'Simplifying the\nmarine service',
+    image: heroSlide1Img,
+    primaryBtn: 'About Us',
+    secondaryBtn: 'Verify Licence',
+  },
+  {
+    id: 2,
+    subtitle: 'Unbeatable Offshore',
+    title: 'Simplifying the\nmarine service',
+    image: heroSlide2Img,
+    primaryBtn: 'About Us',
+    secondaryBtn: 'Verify Licence',
+  },
+  {
+    id: 3,
+    subtitle: 'Unbeatable Offshore',
+    title: 'Simplifying the\nmarine service',
+    image: heroSlide3Img,
+    primaryBtn: 'About Us',
+    secondaryBtn: 'Verify Licence',
+  }, 
+  //  {
+  //   id: 4,
+  //   subtitle: 'Unbeatable Offshore',
+  //   title: 'Simplifying the\nmarine service',
+  //   image: heroSlide2Img,
+  //   primaryBtn: 'About Us',
+  //   secondaryBtn: 'Verify Licence',
+  // }, 
+  //  {
+  //   id: 5,
+  //   subtitle: 'Unbeatable Offshore',
+  //   title: 'Simplifying the\nmarine service',
+  //   image: heroSlide2Img,
+  //   primaryBtn: 'About Us',
+  //   secondaryBtn: 'Verify Licence',
+  // },
+];
+
 export default function App() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isPaused]);
   return (
     <div className="min-h-screen font-sans text-slate-800 flex flex-col w-full overflow-x-hidden">
       {/* Top Bar */}
@@ -86,30 +144,45 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative h-[650px] flex items-center px-4 md:px-12">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1551524162-4299b9cc0cc3?q=80&w=2070&auto=format&fit=crop"
-            alt="Marine Workers"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-[#0c1938]/60"></div>
-        </div>
-        <div className="relative z-10 max-w-3xl text-white mt-12">
-          <div className="text-[13px] font-bold tracking-[0.15em] mb-4 uppercase">
-            Unbeatable Offshore
+      {/* Hero Automatic Slider Section */}
+      <section
+        className="relative h-[650px] flex items-center px-4 md:px-12 overflow-hidden select-none"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        {/* Slider Background Images */}
+        {heroSlides.map((slide, index) => (
+          <div
+            key={slide.id}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentSlide ? 'opacity-100 z-0' : 'opacity-0 -z-10'
+            }`}
+          >
+            <img
+              src={slide.image}
+              alt={slide.subtitle}
+              className="w-full h-full object-cover scale-105 transition-transform duration-10000 ease-out"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0c1938]/85 via-[#0c1938]/60 to-transparent"></div>
           </div>
-          <h1 className="text-5xl md:text-[72px] font-bold leading-[1.1] mb-10 tracking-tight">
-            Simplifying the<br />marine service
+        ))}
+
+        {/* Slider Content */}
+        <div className="relative z-10 max-w-3xl text-white mt-8 pl-2 md:pl-6">
+          <div className="text-[13px] font-bold tracking-[0.18em] mb-4 uppercase text-[#4ea6e0] transition-all duration-500">
+            {heroSlides[currentSlide].subtitle}
+          </div>
+          <h1 className="text-4xl sm:text-5xl md:text-[68px] font-bold leading-[1.12] mb-10 tracking-tight whitespace-pre-line min-h-[140px] md:min-h-[160px] flex items-center">
+            {heroSlides[currentSlide].title}
           </h1>
-          <div className="flex gap-4">
-            <button className="bg-[#df0a15] text-white px-7 py-3.5 flex items-center justify-center gap-2 font-semibold text-[15px] hover:bg-red-700 transition-colors shadow-lg">
-              About Us <ArrowRight size={18} />
+          <div className="flex flex-wrap gap-4 items-center">
+            <button className="bg-[#df0a15] text-white px-7 py-3.5 flex items-center justify-center gap-2.5 font-semibold text-[15px] hover:bg-red-700 transition-colors shadow-xl group whitespace-nowrap">
+              <span>{heroSlides[currentSlide].primaryBtn}</span>
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="bg-[#0b63b3] text-white px-5 py-2.5 flex items-center justify-center gap-3 font-semibold hover:bg-blue-700 transition-colors shadow-lg">
-              <span className="text-left text-[13px] leading-[1.1]">Verify<br />Liscence</span>
-              <ArrowRight size={18} />
+            <button className="bg-[#0b63b3] text-white px-7 py-3.5 flex items-center justify-center gap-2.5 font-semibold text-[15px] hover:bg-blue-700 transition-colors shadow-xl group whitespace-nowrap">
+              <span>{heroSlides[currentSlide].secondaryBtn}</span>
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>
@@ -130,57 +203,73 @@ export default function App() {
       </section>
 
       {/* Features Grid */}
-      <section className="pb-28 px-4 md:px-12 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-        <div className="flex flex-col items-center">
-          <div className="w-[84px] h-[84px] rounded-full border-[3px] border-[#111a3a] flex items-center justify-center mb-6">
-            <Check size={42} strokeWidth={2.5} className="text-[#111a3a]" />
+      <section className="pb-28 px-4 md:px-12 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div className="relative overflow-hidden flex flex-col items-center p-8 rounded-2xl bg-white border border-slate-100 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-blue-200/70 group cursor-pointer">
+          {/* Light Gradient Background Overlay on Hover */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-sky-50/40 to-red-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
+          
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="w-[84px] h-[84px] rounded-full border-[3px] border-[#111a3a] flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-[#111a3a] group-hover:scale-110 shadow-md">
+              <Check size={42} strokeWidth={2.5} className="text-[#111a3a] group-hover:text-white transition-colors duration-300" />
+            </div>
+            <h3 className="text-[24px] font-medium text-[#111a3a] mb-5 transition-colors duration-300 group-hover:text-[#df0a15]">We are certified</h3>
+            <p className="text-[#666] text-[15px] leading-[1.8]">
+              We are certified by the Nigerian Maritime Administration and Safety Agency and other related agencies
+              with top quality assurance
+            </p>
           </div>
-          <h3 className="text-[24px] font-medium text-[#111a3a] mb-5">We are certified</h3>
-          <p className="text-[#666] text-[15px] leading-[1.8]">
-            We are certified by the Nigerian Maritime Administration and Safety Agency and other related agencies
-            with top quality assurance
-          </p>
         </div>
-        <div className="flex flex-col items-center">
-          <div className="w-[84px] h-[84px] rounded-full border-[3px] border-[#111a3a] flex items-center justify-center mb-6">
-            <Check size={42} strokeWidth={2.5} className="text-[#111a3a]" />
+
+        <div className="relative overflow-hidden flex flex-col items-center p-8 rounded-2xl bg-white border border-slate-100 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-blue-200/70 group cursor-pointer">
+          {/* Light Gradient Background Overlay on Hover */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-sky-50/40 to-red-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
+          
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="w-[84px] h-[84px] rounded-full border-[3px] border-[#111a3a] flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-[#111a3a] group-hover:scale-110 shadow-md">
+              <Check size={42} strokeWidth={2.5} className="text-[#111a3a] group-hover:text-white transition-colors duration-300" />
+            </div>
+            <h3 className="text-[24px] font-medium text-[#111a3a] mb-5 transition-colors duration-300 group-hover:text-[#df0a15]">We are professionals</h3>
+            <p className="text-[#666] text-[15px] leading-[1.8]">
+              We are highly equipped with only professionals in different fields just for
+              your need. Your business is sure on track with Unbeatble Offshore
+            </p>
           </div>
-          <h3 className="text-[24px] font-medium text-[#111a3a] mb-5">We are professionals</h3>
-          <p className="text-[#666] text-[15px] leading-[1.8]">
-            We are highly equipped with only professionals in different fields just for
-            your need. Your business is sure on track with Unbeatble Offshore
-          </p>
         </div>
-        <div className="flex flex-col items-center">
-          <div className="w-[84px] h-[84px] rounded-full border-[3px] border-[#111a3a] flex items-center justify-center mb-6">
-            <Check size={42} strokeWidth={2.5} className="text-[#111a3a]" />
+
+        <div className="relative overflow-hidden flex flex-col items-center p-8 rounded-2xl bg-white border border-slate-100 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-blue-200/70 group cursor-pointer">
+          {/* Light Gradient Background Overlay on Hover */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-sky-50/40 to-red-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
+          
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="w-[84px] h-[84px] rounded-full border-[3px] border-[#111a3a] flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-[#111a3a] group-hover:scale-110 shadow-md">
+              <Check size={42} strokeWidth={2.5} className="text-[#111a3a] group-hover:text-white transition-colors duration-300" />
+            </div>
+            <h3 className="text-[24px] font-medium text-[#111a3a] mb-5 transition-colors duration-300 group-hover:text-[#df0a15]">We are unbeatable</h3>
+            <p className="text-[#666] text-[15px] leading-[1.8]">
+              We are certified, professionals and unbeatable in the marine industry.
+              With our wealth of experienced, tools and the best human resource we
+              pride to give only the best
+            </p>
           </div>
-          <h3 className="text-[24px] font-medium text-[#111a3a] mb-5">We are unbeatable</h3>
-          <p className="text-[#666] text-[15px] leading-[1.8]">
-            We are certified, professionals and unbeatable in the marine industry.
-            With our wealth of experienced, tools and the best human resource we
-            pride to give only the best
-          </p>
         </div>
       </section>
 
       {/* Split Image / Text Section */}
       <section className="flex flex-col md:flex-row w-full">
-        <div className="md:w-1/2 min-h-[500px] relative">
+        <div className="md:w-1/2 min-h-[420px] md:min-h-[520px] relative overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1542385151-efd9000785a0?q=80&w=2070&auto=format&fit=crop"
-            alt="Engineering Workers"
-            className="absolute inset-0 w-full h-full object-cover"
+            src={industrialPracticeImg}
+            alt="Industrial Practices & Marine Engineering"
+            className="absolute inset-0 w-full h-full object-cover object-center"
           />
         </div>
-        <div className="md:w-1/2 bg-[#1b2a47] text-white p-12 md:p-[100px] flex flex-col justify-center items-start">
-          <h2 className="text-[28px] md:text-[34px] font-medium leading-[1.4] mb-10 text-white tracking-wide">
-            Our desire therefore is to contribute to better and safer industrial practices
-            through adequate planning and execution of projects bearing in mind
-            the demands of the environment and statutory regulations.
+        <div className="md:w-1/2 bg-[#0a1c48] text-white p-8 sm:p-12 md:p-16 lg:p-20 flex flex-col justify-center items-start">
+          <h2 className="text-[24px] sm:text-[28px] md:text-[32px] lg:text-[36px] font-semibold leading-[1.32] mb-10 text-white tracking-normal">
+            Our desire therefore is to contribute to better and safer industrial practices through adequate planning and execution of projects bearing in mind the demands of the environment and statutory regulations.
           </h2>
-          <button className="bg-[#df0a15] text-white px-8 py-3.5 flex items-center gap-2 font-semibold text-[15px] hover:bg-red-700 transition-colors shadow-lg">
-            Speak With Us <ArrowRight size={18} />
+          <button className="bg-[#df0a15] text-white px-7 py-3.5 flex items-center gap-2.5 font-semibold text-[15px] hover:bg-red-700 transition-colors shadow-lg group">
+            <span>Speak With Us</span>
+            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </section>
@@ -189,7 +278,7 @@ export default function App() {
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
         <div className="relative h-[360px] group overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1504913659239-6affa48411bc?q=80&w=800&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1504913659239-6affa48411bc"
             className="w-full h-full object-cover"
             alt="Vessel Manning"
           />
@@ -201,7 +290,7 @@ export default function App() {
         </div>
         <div className="relative h-[360px] group overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=800&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1517048676732-d65bc937f952"
             className="w-full h-full object-cover"
             alt="Vessel Chartering"
           />
@@ -213,7 +302,7 @@ export default function App() {
         </div>
         <div className="relative h-[360px] group overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&w=800&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1494412651409-8963ce7935a7"
             className="w-full h-full object-cover"
             alt="Vessel Acquisition"
           />
@@ -225,7 +314,7 @@ export default function App() {
         </div>
         <div className="relative h-[360px] group overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1583508915901-b5f84c1dcde1?q=80&w=800&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1583508915901-b5f84c1dcde1"
             className="w-full h-full object-cover"
             alt="Security Service"
           />
